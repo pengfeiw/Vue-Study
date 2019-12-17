@@ -1,0 +1,58 @@
+<!-- 
+1.模板语法：{{}}
+2.核心指令：v-bind, v-on, v-if, v-for, v-html, v-once
+3.指令简写：v-bind:href="url" ——> :href="url"
+           v-on:click="click" ——> @click="click"
+4.动态参数：v-on:[eventname]="event"
+5.修饰符：v-on:click.prevent="dosomething"
+ -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VUE模板语法</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app-1">
+        <p>Using mustaches: {{ rawHtml }}</p>
+        <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+        <button v-bind:disabled="isButtonDisabled">点击</button>
+        <p v-if="seen">现在你看到我了</p>
+        <a :href="url" target="_blank">超链接</a><br>
+        <button @click="dosomething">点击2</button>
+        <!-- <p v-on:[eventName]="dosomething">可以赋予不同的事件</p> -->
+        <!-- <a v-on:[eventName]="doSomething"> ... </a> -->
+        <br><a v-bind:[attname]="url">111</a><br>
+        <button v-on:[eventName]="dosomething2">点击3</button><br>
+        <a href="http://www.baidu.com" v-on:click.prevent='dosomething' target="_blank">测试.prevent修饰符</a>
+    </div>
+    <script type="text/javascript">
+        var app1 = new Vue({
+            el:'#app-1',
+            data:{
+                rawHtml:'<span style="color:red">This should be red.</span>',
+                isButtonDisabled:true,
+                seen:true,
+                url:'http://www.baidu.com',
+                dosomething:function(){
+                    alert('使用v-on指令添加事件');
+                },
+                dosomething2:function(){
+                    alert('使用动态参数添加事件');
+                },
+                eventname:'click',
+                attname:'href',
+                
+            }
+        });
+
+        var btn = document.querySelector('button');
+        btn.addEventListener('click', function(){
+            alert('button is not disabled.');
+        });
+    </script>
+</body>
+
+</html>
