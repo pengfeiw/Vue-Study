@@ -11,18 +11,45 @@
     <div id="example">
         <p>Original message: "{{ message }}"</p>
         <p>Computed reversed message: "{{ reversedMessage }}"</p>
-	<script type="text/javascript">
-		var vm = new Vue({
-			el:'#example',
-			data:{
-				message:'hello'
-			},
-			computed:{
-				reversedMessage(){
-					return this.message.split('').reverse().join('');
-				}
-			}
-		});
-	</script>
+        <p>Time: {{now()}}</p>
+        <div id="example">{{fullName}}</div>
+        <script type="text/javascript">
+        var vm = new Vue({
+            el: '#example',
+            data: {
+                message: 'hello',
+                firstName: 'Foo',
+                lastName: 'Bar',
+                fullName: 'Foo Bar'
+            },
+            computed: {
+                reversedMessage() {
+                    return this.message.split('').reverse().join('');
+                },
+                now() {
+                    var d = Date(Date.now());
+                    return d.toString();
+                }
+            },
+            methods: {
+                reversedMessage: function() {
+                    return this.message.split('').reverse().join('')
+                },
+                now: function() {
+                    var d = Date(Date.now());
+                    return d.toString();
+                }
+            },
+            watch: {
+                firstName: function(val) {
+                    this.fullName = val + ' ' + this.lastName
+                },
+                lastName: function(val) {
+                    this.fullName = this.firstName + ' ' + val
+                }
+            }
+        });
+        </script>
 </body>
+
 </html>
