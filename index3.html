@@ -1,8 +1,10 @@
 <!-- 条件渲染 -->
 <!-- 
-	1.v-if
-	2.v-else
-	3.v-else-if 
+    1.v-if
+    2.v-else
+    3.v-else-if 
+    4.v-show
+    5.v-for
 -->
 <!DOCTYPE html>
 <html>
@@ -32,16 +34,14 @@
             Not A/B/C
         </div>
     </div>
-    <!-- <div id="app3">
-        <template v-if="loginType === 'username'">
-            <label>Username</label>
-            <input placeholder="Enter your username">
-        </template>
-        <template v-else>
-            <label>Email</label>
-            <input placeholder="Enter your email address">
-        </template>
-    </div> -->
+    <div id="app-3">
+        <h1 v-show='ok'>Hello!</h1>
+    </div>
+    <div id="app-4">
+        <ul>
+            <li v-for="item in items">{{item}}</li>
+        </ul>
+    </div>
     <script type="text/javascript">
     var app1 = new Vue({
         el: '#app-1',
@@ -55,12 +55,19 @@
             type: 'xxx'
         }
     });
-    // var app3 = new Vue({
-    // 	el:'#app-3',
-    // 	data:{
-    // 		loginType: 'username'
-    // 	}
-    // });
+    var app3 = new Vue({
+        el: '#app-3',
+        data: {
+            ok: true
+        }
+    });
+    var app4 = new Vue({
+        el: '#app-4',
+        data: {
+            items: ["A", "B", "C"]
+        }
+
+    });
     </script>
 </body>
 

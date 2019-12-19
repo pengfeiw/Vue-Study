@@ -1,0 +1,40 @@
+<!-- vue是响应式的，但是如果我们通过数组索引直接更改data里面数组内容，那么页面是不会响应的 -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>列表渲染</title>
+	<meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<ul id="example-1">
+		<li v-for="item in items">
+			{{item.message}}
+		</li>
+	</ul>
+
+	<ul id="example-2">
+		<li v-for="(stu, id) in students">
+			student{{id}}:{{stu.name}}
+		</li>
+	</ul>
+	<script type="text/javascript">
+		var example1 = new Vue({
+			el:'#example-1',
+			data:{
+				items:[
+					{message:'Foo'},
+					{message:'Bar'}
+				]
+			}
+		});
+		var example2 = new Vue({
+			el:'#example-2',
+			data:{
+				students:[{name:'Wang Pengfei'}, {name:'Tang Weijuan'}]
+			}
+		});
+	</script>
+</body>
+</html>
