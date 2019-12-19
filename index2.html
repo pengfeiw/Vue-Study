@@ -14,6 +14,11 @@
         <p>Time: {{now()}}</p>
     </div>
     <div id="demo">{{fullName}}</div>
+    <div id="demo2">
+        <div>FirstName:{{firstName}}</div>
+        <div>LastName:{{lastName}}</div>
+        <div>FullName:{{fullName}}</div>
+    </div>
     <script type="text/javascript">
     var vm = new Vue({
         el: '#example',
@@ -53,6 +58,26 @@
             },
             lastName: function(val) {
                 this.fullName = this.firstName + ' ' + val;
+            }
+        }
+    });
+
+    var vm3 = new Vue({
+        el: '#demo2',
+        data: {
+            firstName: "Pengfei",
+            lastName: "Wang"
+        },
+        computed: {
+            fullName: {
+                get: function() {
+                    return this.firstName + ' ' + this.lastName;
+                },
+                set: function(newName) {
+                    var nameSplits = newName.split(' ');
+                    this.firstName = nameSplits[0];
+                    this.lastName = nameSplits[1];
+                }
             }
         }
     });

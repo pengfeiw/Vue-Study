@@ -1,0 +1,67 @@
+<!-- 条件渲染 -->
+<!-- 
+	1.v-if
+	2.v-else
+	3.v-else-if 
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>条件渲染</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app-1">
+        <h1 v-if="awesome">Vue is awesome!</h1>
+        <h1 v-else>Oh no 😢</h1>
+    </div>
+    <div id="app-2">
+        <div v-if="type === 'A'">
+            A
+        </div>
+        <div v-else-if="type === 'B'">
+            B
+        </div>
+        <div v-else-if="type === 'C'">
+            C
+        </div>
+        <div v-else>
+            Not A/B/C
+        </div>
+    </div>
+    <!-- <div id="app3">
+        <template v-if="loginType === 'username'">
+            <label>Username</label>
+            <input placeholder="Enter your username">
+        </template>
+        <template v-else>
+            <label>Email</label>
+            <input placeholder="Enter your email address">
+        </template>
+    </div> -->
+    <script type="text/javascript">
+    var app1 = new Vue({
+        el: '#app-1',
+        data: {
+            awesome: true
+        }
+    });
+    var app2 = new Vue({
+        el: '#app-2',
+        data: {
+            type: 'xxx'
+        }
+    });
+    // var app3 = new Vue({
+    // 	el:'#app-3',
+    // 	data:{
+    // 		loginType: 'username'
+    // 	}
+    // });
+    </script>
+</body>
+
+</html>
