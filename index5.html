@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>事件处理</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<h3>一个简单的例子</h3>
+    <div id="example-1">
+        <button v-on:click="counter += 1">Add 1</button>
+        <p>The button above has been clicked {{ counter }} times.</p>
+    </div>
+    <h3>v-on传递一个事件监听函数</h3>
+    <div id="example-2">
+    	<button v-on:click="addOne">Add 1</button>
+    </div>
+    <script type="text/javascript">
+    	var emp1 = new Vue({
+    		el:'#example-1',
+    		data:{
+    			counter:0
+    		}
+    	});
+    	var emp2 = new Vue({
+    		el:'#example-2',
+    		data:{
+    			counter:0
+    		},
+    		methods:{
+    			addOne:function(event){
+    				this.counter++;
+    				alert(`The button above has been clicked ${this.counter} times.`);
+    				if(event){
+    					console.log(event.target.tagName);
+    				}
+    			}
+    		}
+    	});
+    </script>
+</body>
+
+</html>

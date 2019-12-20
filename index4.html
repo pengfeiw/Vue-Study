@@ -1,40 +1,111 @@
 <!-- vue是响应式的，但是如果我们通过数组索引直接更改data里面数组内容，那么页面是不会响应的 -->
-
+<!--
+  	1.遍历数组成员 
+  	2.遍历对象属性
+  	3.无法通过数组索引和数组的length属性直接修改数组
+  	4. 数组更新检测：
+ 		a.利用mutation method(可改变数组本身的方法，如Array.prototype.push(), Array.prototype.pop())
+ 		b.利用non-mutating method(数组本身并不会改变，而是返回一个新数组，如Array.prototype.slice(), Array.prototype.pslice(), Array.prototype.filter())直接替换数组
+ 		c.利用Vue.set()方法
+ 	5.和数组类似，由于JavaScript的限制，Vue无法检测对象属性的添加或删除
+ 	6.对象检测更新方法：
+ 		a.通过Vue.set(object, propertyName, value) 方法
+ 		b.或者利用赋值（=），直接替换对象
+ 	7.元素中使用vue特性如'v-for',那么该元素的父元素或者祖辈元素必须是vue element(与vue实例相关联的元素)
+-->
 <!DOCTYPE html>
 <html>
 <head>
-	<title>列表渲染</title>
-	<meta charset="utf-8">
+    <title>列表渲染</title>
+    <meta charset="utf-8">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
-<body>
-	<ul id="example-1">
-		<li v-for="item in items">
-			{{item.message}}
-		</li>
-	</ul>
 
-	<ul id="example-2">
-		<li v-for="(stu, id) in students">
-			student{{id}}:{{stu.name}}
-		</li>
-	</ul>
-	<script type="text/javascript">
-		var example1 = new Vue({
-			el:'#example-1',
-			data:{
-				items:[
-					{message:'Foo'},
-					{message:'Bar'}
-				]
-			}
-		});
-		var example2 = new Vue({
-			el:'#example-2',
-			data:{
-				students:[{name:'Wang Pengfei'}, {name:'Tang Weijuan'}]
-			}
-		});
-	</script>
+<body>
+    <h3>v-for遍历数组成员</h3>
+    <ul id="example-1">
+        <li v-for="item in items">
+            {{item.message}}
+        </li>
+    </ul>
+    <h3>v-for遍历数组成员时可添加索引</h3>
+    <ul id="example-2">
+        <li v-for="(stu, id) in students">
+            student{{id}}:{{stu.name}}
+        </li>
+    </ul>
+    <h3>v-for遍历对象属性</h3>
+    <ul id="example-3">
+        <li v-for="item in TWJ">
+            {{item}}
+        </li>
+    </ul>
+    <h3>v-for遍历对象属性时，可添加属性名称</h3>
+    <ul id="example-4">
+        <li v-for="(item,name) in WPF">
+            {{name}}:{{item}}
+        </li>
+    </ul>
+    <h3>v-for遍历对象属性时，第三个参数可添加属性索引</h3>
+    <ul id="example-5">
+        <li v-for="(item, name, index) in CDP">
+            {{index}}.{{name}}:{{item}}
+        </li>
+    </ul>
+    <h3>在v-for里使用范围</h3>
+    <div id="example-6">
+        <span v-for="n in 10">{{n}}</span>
+    </div>
+    <script type="text/javascript">
+    var example1 = new Vue({
+        el: '#example-1',
+        data: {
+            items: [
+                { message: 'Foo' },
+                { message: 'Bar' }
+            ]
+        }
+    });
+    var example2 = new Vue({
+        el: '#example-2',
+        data: {
+            students: [{ name: 'Wang Pengfei' }, { name: 'Tang Weijuan' }]
+        }
+    });
+    var example3 = new Vue({
+        el: '#example-3',
+        data: {
+            TWJ: {
+                name: 'Tang Weijuan',
+                age: 24,
+                sex: 'female'
+            }
+        }
+    });
+    var example4 = new Vue({
+        el: '#example-4',
+        data: {
+            WPF: {
+                name: 'Wang Pengfei',
+                age: 24,
+                sex: 'male'
+            }
+        }
+    });
+    var example5 = new Vue({
+        el: '#example-5',
+        data: {
+            CDP: {
+                name: 'Chen Deping',
+                age: 44,
+                sex: 'male'
+            }
+        }
+    });
+    var example6 = new Vue({
+        el: '#example-6',
+    });
+    </script>
 </body>
+
 </html>
