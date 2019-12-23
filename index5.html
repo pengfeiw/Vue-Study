@@ -1,43 +1,171 @@
+<!-- 
+1.v-on传递一个事件监听函数
+1.事件修饰符
+3.按键修饰符
+4.系统修饰键
+5.鼠标修饰键 
+-->
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>事件处理</title>
     <meta charset="utf-8">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
+
 <body>
-	<h3>一个简单的例子</h3>
+    <h3>一个简单的例子</h3>
     <div id="example-1">
         <button v-on:click="counter += 1">Add 1</button>
         <p>The button above has been clicked {{ counter }} times.</p>
     </div>
     <h3>v-on传递一个事件监听函数</h3>
     <div id="example-2">
-    	<button v-on:click="addOne">Add 1</button>
+        <button v-on:click="addOne">Add 1</button>
+    </div>
+    <h3>v-on回调函数中传递DOM原始事件：$event</h3>
+    <div id="example-3">
+        <a href="http://www.baidu.com" v-on:click="warn('不会跳转到百度页面！', $event)">百度？</a>
+    </div>
+    <h3>事件修饰符</h3>
+    <!-- .stop .prevent .capture .self .once .passive -->
+    <div id="example-4">
+        <a href="http://www.baidu.com" v-on:click.prevent="warn(`使用事件修饰符'.prevent'阻止连接跳转！`)">百度？</a><br>
+        <button @click.once="onceClick">触发一次</button>
+    </div>
+    <h3>按键修饰符</h3>
+    <div id="example-5">
+        <!-- button必须先获得焦点，然后才能触发按键事件 -->
+        <button v-on:keyup.32="keyUp">使用keycode按键</button>
+        <!-- .enter .tab .delete .esc .space .up .down .left .right -->
+        <button v-on:keyup.enter="keyEnter">使用回车键别名</button>
+    </div>
+    <h3>使用Vue.config.keyCodes自定义按键修饰符别名（keyCode）</h3>
+    <script type="text/javascript">
+    Vue.config.keyCodes.esc = 13;
+    </script>
+    <div id="example-6">
+        <button v-on:keyup="costomKeycode('', $event)">keyCode13已经不是回车键了</button>
+    </div>
+    <h3>系统修饰键：ctrl alt shift meta</h3>
+    <!--   请注意修饰键与常规按键不同，在和 keyup 事件一起用时，事件触发时修饰键必须处于按下状态。换句话说，只有在按住 ctrl 的情况下释放其它按键，才能触发 keyup.ctrl。而单单释放 ctrl 也不会触发事件。如果你想要这样的行为，请为 ctrl 换用 keyCode：keyup.17。 -->
+    <div id="example-7">
+        <button @keyup.alt.67="altCombine">alt key</button>
+    </div>
+    <h3>.exact修饰符：控制某个精确的系统修饰符组合触发事件</h3>
+    <div id="example-8">
+        <!-- 即使 Alt 或 Shift 被一同按下时也会触发 -->
+        <button @click.ctrl="onClick">即使 Alt 或 Shift 被一同按下时也会触发</button>
+        <!-- 有且只有 Ctrl 被按下的时候才触发 -->
+        <button @click.ctrl.exact="onCtrlClick">有且只有 Ctrl 被按下的时候才触发</button>
+        <!-- 没有任何系统修饰符被按下的时候才触发 -->
+        <button @click.exact="onNoSysModifier">没有任何系统修饰符被按下的时候才触发</button>
+    </div>
+    <h3>鼠标按钮修饰符</h3>
+    <div id="example-9">
+        <button @click.left="leftMouseBtn">鼠标左键</button>
+        <button @click.middle="middleMouseBtn">鼠标中键</button>
+        <button @click.right.prevent="rightMouseBtn">鼠标右键</button>
     </div>
     <script type="text/javascript">
-    	var emp1 = new Vue({
-    		el:'#example-1',
-    		data:{
-    			counter:0
-    		}
-    	});
-    	var emp2 = new Vue({
-    		el:'#example-2',
-    		data:{
-    			counter:0
-    		},
-    		methods:{
-    			addOne:function(event){
-    				this.counter++;
-    				alert(`The button above has been clicked ${this.counter} times.`);
-    				if(event){
-    					console.log(event.target.tagName);
-    				}
-    			}
-    		}
-    	});
+    var emp1 = new Vue({
+        el: '#example-1',
+        data: {
+            counter: 0
+        }
+    });
+    var emp2 = new Vue({
+        el: '#example-2',
+        data: {
+            counter: 0
+        },
+        methods: {
+            addOne: function(event) {
+                this.counter++;
+                alert(`The button above has been clicked ${this.counter} times.`);
+                if (event) {
+                    console.log(event.target.tagName);
+                }
+            }
+        }
+    });
+    var emp3 = new Vue({
+        el: '#example-3',
+        methods: {
+            warn: function(message, event) {
+                alert(message);
+                if (event) {
+                    event.preventDefault();
+                }
+            },
+        }
+    });
+    var emp4 = new Vue({
+        el: '#example-4',
+        methods: {
+            warn: function(message) {
+                alert(message);
+            },
+            onceClick: function() {
+                alert('Only trigger once!');
+            }
+        }
+    });
+    var emp5 = new Vue({
+        el: '#example-5',
+        methods: {
+            keyUp: function() {
+                alert('使用按键修饰符触发特定按键事件！');
+            },
+            keyEnter: function() {
+                alert('使用Enter别名触发按键事件！');
+            }
+        }
+    });
+    var emp6 = new Vue({
+        el: '#example-6',
+        methods: {
+            costomKeycode: function(message, event) {
+                alert('你正在使用的是自定义keyCode触发事件！');
+            }
+        }
+    });
+    var emp7 = new Vue({
+        el: '#example-7',
+        methods: {
+            altCombine: function(message) {
+                alert('使用系统修饰键.alt触发按键事件。')
+            }
+        }
+    });
+    var emp8 = new Vue({
+        el: '#example-8',
+        methods: {
+            onClick: function() {
+                alert('Alt和shift一同按下时也会触发事件');
+            },
+            onCtrlClick: function(){
+                alert('有且只有Ctrl被按下时才触发。');
+            },
+            onNoSysModifier:function(){
+                alert('没有任何系统修饰符被按下的时候才触发。')
+            }
+        }
+    });
+     var emp9 = new Vue({
+        el: '#example-9',
+        methods: {
+            leftMouseBtn: function() {
+                alert('鼠标左键事件触发');
+            },
+            middleMouseBtn: function(){
+                alert('鼠标中键事件触发');
+            },
+            rightMouseBtn:function(){
+                alert('鼠标右键事件触发')
+            }
+        }
+    });
     </script>
 </body>
 
