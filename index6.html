@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>表单输入绑定</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<h3>文本</h3>
+	<form id="app-1">
+		<input type="text" v-model="message" placeholder="edit me">
+		<p>Message is: {{message}}</p>
+	</form>
+	<h3>多行文本</h3>
+	<form id="app-2">
+		<textarea v-model="message" placeholder="add multiple line"></textarea>
+		<p style="white-space:pre-line;">Message is:{{message}}</p>
+	</form>
+	<h3>复选框绑定布尔值</h3>
+	<form id="app-3">
+		<input type="checkbox" id="checkbox" v-model="checked">
+		<label for="checkbox">{{checked}}</label>
+	</form>
+	<h3>多个复选框绑定到同一数组</h3>
+	<div id="app-4">
+		<input type="checkbox" id="jack" value="Jack" v-model="checkedNames"> <label for="jack">Jack</label>
+		<input type="checkbox" id="john" value="John" v-model="checkedNames"> <label for="john">John</label>
+		<input type="checkbox" id="mike" value="Mike" v-model="checkedNames"> <label for="mike">Mike</label> <br>
+		<span>Checked Names:{{checkedNames}}</span>
+	</div>
+	<h3>单选按钮</h3>
+	<div id="app-5">
+		<input type="radio" id="One" v-model="picked" value="One">
+		<label for="One">One</label>
+		<br>
+		<input type="radio" id="Two" v-model="picked" value="Two">
+		<label for="Two">Two</label>
+		<br>
+		<span>Picked:{{picked}}</span>
+	</div>
+	<h3>选择框</h3>
+	<div id="app-6">
+		<select v-model="selected">
+			<option disabled value="">请选择</option>
+			<option>A</option>
+			<option>B</option>
+			<option>C</option>
+		</select>
+		<br>
+		<span>Selected: {{selected}}</span>
+	</div>
+	<h3>多选选择框绑定到一个数组</h3>
+	<div id="app-7">
+		<select v-model="selected" multiple style="width: 50px;">
+			<option disabled value="">请选择</option>
+			<option>A</option>
+			<option>B</option>
+			<option>C</option>
+		</select>
+		<br>
+		<span>Selected: {{selected}}</span>
+	</div>
+	<h3>使用v-for渲染动态选项</h3>
+	<div id="app-8">
+		<select v-model="selected">
+			<option v-for="option in options" :value="option.value">{{option.text}}</option>
+		</select>
+		<br>
+		<span>Selected:{{selected}}</span>
+	</div>
+	<h3>修饰符</h3>
+	<div id="app-9">
+		<input v-model.lazy="msg" id="lazy"><label for="lazy">lazy:{{msg}}</label><br>
+		<input id="number" type="number" v-model.number="age"><label for="number">age:{{age}}</label><br>
+		<input v-model.trim="trimMsg" id="trim"><label for="trim">trim:{{trimMsg}}</label>
+	</div>
+	<script type="text/javascript">
+		var app1 = new Vue({
+			el:'#app-1',
+			data:{
+				message:'Hello Vue!'
+			}
+		});
+		var app2 = new Vue({
+			el:'#app-2',
+			data:{
+				message:'多行文本'
+			}
+		});
+		var app3 = new Vue({
+			el:'#app-3',
+			data:{
+				checked:true
+			}
+		});
+		var app4 = new Vue({
+			el:'#app-4',
+			data:{
+				checkedNames:[]
+			}
+		});
+		var app5 = new Vue({
+			el:'#app-5',
+			data:{
+				picked:''
+			}
+		});
+		var app6 = new Vue({
+			el:'#app-6',
+			data:{
+				selected:''
+			}
+		});
+		var app7 = new Vue({
+			el:'#app-7',
+			data:{
+				selected:[]
+			}
+		});
+		var app8 = new Vue({
+			el:'#app-8',
+			data:{
+				options:[
+				{text:'One', value:'A'},
+				{text:'Two', value:'B'},
+				{text:'Three', value:'C'}
+				],
+				selected:''
+			}
+		});
+		var app9 = new Vue({
+			el:'#app-9',
+			data:{
+				msg:'',
+				age:24,
+				trimMsg:''
+			}
+		});
+	</script>
+</body>
+</html>
