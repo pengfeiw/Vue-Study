@@ -1,0 +1,97 @@
+<!--
+1.因为组件是可复用的Vue实例，所以和new Vue()接受相同的选项，如data、computed、watch、methods（el例外）
+2.组件注册有两种：全局注册和局部注册，使用Vue.component()注册属于全局注册
+3.全局注册的组件可以用在其被注册之后的任何 (通过 new Vue) 新创建的 Vue 根实例，也包括其组件树中的所有子组件的模板中。 
+4.组件template只能包括一个根节点,例如template: '<span>{{title}}</span><br>',有span和br两个节点那么脚本也会报错
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>组件基础</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <h3>button-counter组件的示例及复用</h3>
+    <div id="components-demo">
+        <button-counter></button-counter><br>
+        <button-counter></button-counter>
+    </div>
+    <h3>给组件添加属性：通过prop向子组件传递数据</h3>
+    <div id="components-demo2">
+        <blog-post title="My first blog"></blog-post>
+        <blog-post title="My second blog"></blog-post>
+        <blog-post title="My third blog"></blog-post>
+    </div>
+    <h3>在Vue根实例data中获得数据，渲染页面</h3>
+    <div id="components-demo3">
+        <blog-post v-for="post in posts" :id="post.id" :title="post.title"></blog-post>
+    </div>
+    <h3>组件template不允许有多个根元素，可以外套一个根元素</h3>
+    <div id="components-demo4">
+        <blog-post2 v-for="post in posts" v-bind:key="post.id" v-bind:post="post"></blog-post2>
+    </div>
+    <h3>子组件通过$emit方法触发事件，父组件可以通过v-on监听子组件实例的任意事件</h3>
+    <div id="components-demo5">
+    </div>
+	
+    <script type="text/javascript">
+    // 定义一个名为 button-counter 的新组件
+    Vue.component('button-counter', {
+        //data选项必须是一个函数
+        data: function() {
+            return {
+                count: 0
+            }
+        },
+        template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+    });
+    //定义blog-post组件
+    Vue.component('blog-post', {
+        props: ['title'],
+        template: '<h5>{{title}}</h5>'
+    });
+    Vue.component('blog-post2', {
+        props: ['post'],
+        template: `<div class="blog-post">
+      			   <h3>{{ post.title }}</h3>
+      			   <div v-html="post.content"></div>
+    			   </div>`
+    });
+    
+    //创建的Vue根实例（所关联的节点使用到了组件）必须在全局组件注册之后，否则网页会报错
+    var app1 = new Vue({
+        el: '#components-demo'
+    });
+    var app2 = new Vue({
+        el: '#components-demo2'
+    });
+    var app3 = new Vue({
+        el: '#components-demo3',
+        data: {
+            posts: [
+                { id: 1, title: 'My first blog post.' },
+                { id: 2, title: 'My second blog post.' },
+                { id: 3, title: 'My third blog post.' }
+            ]
+        }
+    });
+    var app4 = new Vue({
+    	el:"#components-demo4",
+    	data:{
+    		posts: [
+                { id: 1, title: 'My first blog post.', content:'content1' },
+                { id: 2, title: 'My second blog post.', content:'content2'  },
+                { id: 3, title: 'My third blog post.' , content:'content3' }
+            ]
+    	}
+    });
+    var app5 = new Vue({
+    	el:"#components-demo5"
+    });
+    </script>
+</body>
+
+</html>

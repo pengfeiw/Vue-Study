@@ -1,0 +1,33 @@
+<!-- 下面的例子不知道哪里出错了，导致事件监听不能起作用 -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>组件疑问</title>
+	<meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="test">
+		<!-- 组件html中还无法直接使用alert和console.log等函数<eventComponent v-on:changesize="alert('changeSize')"></eventComponent> -->
+    	<eventComponent v-on:changesize="info('changeSize')"></eventComponent>
+	</div>
+	<script type="text/javascript">
+		Vue.component('eventcomponent', {
+    	data:function(){
+    		return {name:'Wang Pengfei', postfontsize:16}
+    	},
+    	//为什么template里面的事件监听，不起作用
+    	template:`<div v-bind:style="{fontSize:postfontsize}" v-on:changesize="postfontsize++"><span>name:{{name}}</span><br>
+    	<button v-on:click="$emit('changesize')">ChangeSize</button></div>`
+    });
+	var testVm = new Vue({
+		el:'#test',
+		methods:{
+			info:function(msg){
+				alert(msg);
+			}
+		}
+	});
+	</script>
+</body>
+</html>
