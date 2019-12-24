@@ -14,29 +14,42 @@
 </head>
 
 <body>
-    <h3>button-counter组件的示例及复用</h3>
+    <h3>1.button-counter组件的示例及复用</h3>
     <div id="components-demo">
         <button-counter></button-counter><br>
         <button-counter></button-counter>
     </div>
-    <h3>给组件添加属性：通过prop向子组件传递数据</h3>
+    <h3>2.给组件添加属性：通过prop向子组件传递数据</h3>
     <div id="components-demo2">
         <blog-post title="My first blog"></blog-post>
         <blog-post title="My second blog"></blog-post>
         <blog-post title="My third blog"></blog-post>
     </div>
-    <h3>在Vue根实例data中获得数据，渲染页面</h3>
+    <h3>3.在Vue根实例data中获得数据，渲染页面</h3>
     <div id="components-demo3">
         <blog-post v-for="post in posts" :id="post.id" :title="post.title"></blog-post>
     </div>
-    <h3>组件template不允许有多个根元素，可以外套一个根元素</h3>
+    <h3>4.组件template不允许有多个根元素，可以外套一个根元素</h3>
     <div id="components-demo4">
         <blog-post2 v-for="post in posts" v-bind:key="post.id" v-bind:post="post"></blog-post2>
     </div>
-    <h3>子组件通过$emit方法触发事件，父组件可以通过v-on监听子组件实例的任意事件</h3>
+    <h3>5.子组件通过$emit方法触发事件，父组件可以通过v-on监听子组件实例的任意事件</h3>
     <div id="components-demo5">
+        <div :style="{fontSize: postFontSize + 'em'}">
+             <blog-post-event
+              v-for="post in posts"
+              v-bind:key="post.id"
+              v-bind:post="post" 
+              v-on:enlarge-text="postFontSize += 0.1"
+            ></blog-post-event>
+        </div>
     </div>
-	
+    <h3>6.使用事件抛出一个值，设定$emit的第二个参数, 父级组件监听事件时可以用$event访问值</h3>
+    <div id="components-demo6">
+        <div :style="{fontSize: postFontSize + 'em'}">
+            
+        </div>
+    </div>
     <script type="text/javascript">
     // 定义一个名为 button-counter 的新组件
     Vue.component('button-counter', {
@@ -59,6 +72,27 @@
       			   <h3>{{ post.title }}</h3>
       			   <div v-html="post.content"></div>
     			   </div>`
+    });
+    Vue.component('blog-post-event', {
+        props:['post'],
+        template:`
+            <div class="blog-post">
+                <h5>{{ post.title }}</h5>
+                <button @click="$emit('enlarge-text')">
+                 Enlarge text
+                </button>
+                <div v-html="post.content"></div>
+            </div>
+        `
+    });
+    Vue.components('blog-post-eventValue', {
+        props:['post'],
+        template:`<div>
+            <h5>{{post.title}}</h5>
+            <button @click="$emit(enlarge-text, 0.2)">
+            Enlarge text by 0.2
+            </button>
+        </div>`
     });
     
     //创建的Vue根实例（所关联的节点使用到了组件）必须在全局组件注册之后，否则网页会报错
@@ -89,7 +123,22 @@
     	}
     });
     var app5 = new Vue({
-    	el:"#components-demo5"
+    	el:"#components-demo5",
+        data:{
+            posts: [
+                { id: 1, title: 'My first blog post.', content:'content1' },
+                { id: 2, title: 'My second blog post.', content:'content2'  },
+                { id: 3, title: 'My third blog post.' , content:'content3' }
+            ],
+            postFontSize:1
+        }
+    });
+    var app6 = new Vue({
+        el:'#components-demo6',
+        data:{
+            post:{title:'Only one blog post.'}, 
+            postFontSize:1
+        }
     });
     </script>
 </body>
