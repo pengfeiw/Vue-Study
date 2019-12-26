@@ -36,19 +36,24 @@
     <h3>5.子组件通过$emit方法触发事件，父组件可以通过v-on监听子组件实例的任意事件</h3>
     <div id="components-demo5">
         <div :style="{fontSize: postFontSize + 'em'}">
-             <blog-post-event
-              v-for="post in posts"
-              v-bind:key="post.id"
-              v-bind:post="post" 
-              v-on:enlarge-text="postFontSize += 0.1"
-            ></blog-post-event>
+            <blog-post-event v-for="post in posts" v-bind:key="post.id" v-bind:post="post" v-on:enlarge-text="postFontSize += 0.1"></blog-post-event>
         </div>
     </div>
     <h3>6.使用事件抛出一个值，设定$emit的第二个参数, 父级组件监听事件时可以用$event访问值</h3>
     <div id="components-demo6">
         <div :style="{fontSize: postFontSize + 'em'}">
-            
+            <!-- 监听的父级组件指的就是，Vue.component指定的组件名，这里是blog-post-eventvalue。所以父级组件指的并不是父元素 -->
+            <blog-post-eventvalue :post='post' v-on:enlarge-text="postFontSize += $event"></blog-post-eventvalue>
         </div>
+    </div>
+    <h3>7.组件模拟表单v-model</h3>
+    <div id="components-demo7">
+        <custom-input :value="searchText" @input="searchText = $event;"></custom-input>
+        <label>Content:{{searchText}}</label>
+    </div>
+    <h3>8.通过插槽发布内容:这里很神奇，明明只有一个error，却渲染出来两个！！！！！</h3>
+    <div id="components-demo8">
+        <alert-box>JavaScript<alert-box>
     </div>
     <script type="text/javascript">
     // 定义一个名为 button-counter 的新组件
@@ -69,13 +74,13 @@
     Vue.component('blog-post2', {
         props: ['post'],
         template: `<div class="blog-post">
-      			   <h3>{{ post.title }}</h3>
-      			   <div v-html="post.content"></div>
-    			   </div>`
+                   <h3>{{ post.title }}</h3>
+                   <div v-html="post.content"></div>
+                   </div>`
     });
     Vue.component('blog-post-event', {
-        props:['post'],
-        template:`
+        props: ['post'],
+        template: `
             <div class="blog-post">
                 <h5>{{ post.title }}</h5>
                 <button @click="$emit('enlarge-text')">
@@ -85,16 +90,30 @@
             </div>
         `
     });
-    Vue.components('blog-post-eventValue', {
-        props:['post'],
-        template:`<div>
+    Vue.component('blog-post-eventvalue', {
+        props: ['post'],
+        template: `<div>
             <h5>{{post.title}}</h5>
-            <button @click="$emit(enlarge-text, 0.2)">
+            <button @click="$emit('enlarge-text', 0.2)">
             Enlarge text by 0.2
             </button>
         </div>`
     });
-    
+
+    Vue.component('custom-input', {
+        props: ['value'], //为组件定义一个属性
+        template: `<input v-bind:value="value" @input="$emit('input', $event.target.value)">`
+    });
+
+    Vue.component('alert-box', {
+        template: `
+        <div>
+        error
+          <slot></slot>
+        </div>
+      `
+    })
+
     //创建的Vue根实例（所关联的节点使用到了组件）必须在全局组件注册之后，否则网页会报错
     var app1 = new Vue({
         el: '#components-demo'
@@ -113,32 +132,41 @@
         }
     });
     var app4 = new Vue({
-    	el:"#components-demo4",
-    	data:{
-    		posts: [
-                { id: 1, title: 'My first blog post.', content:'content1' },
-                { id: 2, title: 'My second blog post.', content:'content2'  },
-                { id: 3, title: 'My third blog post.' , content:'content3' }
+        el: "#components-demo4",
+        data: {
+            posts: [
+                { id: 1, title: 'My first blog post.', content: 'content1' },
+                { id: 2, title: 'My second blog post.', content: 'content2' },
+                { id: 3, title: 'My third blog post.', content: 'content3' }
             ]
-    	}
+        }
     });
     var app5 = new Vue({
-    	el:"#components-demo5",
-        data:{
+        el: "#components-demo5",
+        data: {
             posts: [
-                { id: 1, title: 'My first blog post.', content:'content1' },
-                { id: 2, title: 'My second blog post.', content:'content2'  },
-                { id: 3, title: 'My third blog post.' , content:'content3' }
+                { id: 1, title: 'My first blog post.', content: 'content1' },
+                { id: 2, title: 'My second blog post.', content: 'content2' },
+                { id: 3, title: 'My third blog post.', content: 'content3' }
             ],
-            postFontSize:1
+            postFontSize: 1
         }
     });
     var app6 = new Vue({
-        el:'#components-demo6',
-        data:{
-            post:{title:'Only one blog post.'}, 
-            postFontSize:1
+        el: '#components-demo6',
+        data: {
+            post: { title: 'Only one blog post.' },
+            postFontSize: 1
         }
+    });
+    var app7 = new Vue({
+        el: "#components-demo7",
+        data: {
+            searchText: ""
+        }
+    });
+    var app8 = new Vue({
+        el: "#components-demo8",
     });
     </script>
 </body>

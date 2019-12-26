@@ -1,0 +1,42 @@
+<!-- 
+	很遗憾,这里未能重现问题，但是我确实遇到了，见index7.html。
+	1.用插槽向组件发布内容，会用到slot，但是在slot标签旁添加文字，添加一个文字会渲染出两个文字。
+ -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Text beside slot</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="slot_example">
+        <slotexm>JavaScript</slotexm>
+    </div>
+    <div id="slot_example2">
+		<alert-box>cplusplus</alert-box>
+    </div>
+    <script type="text/javascript">
+    Vue.component('slotexm', {
+        template: `<div>Error:<slot></slot></div>` //此处只添加了一个Error：文字
+    });
+    Vue.component('alert-box', {
+        template: `
+        <div>
+        error
+          <slot></slot>
+        </div>
+      `
+    });
+
+    var slotExm = new Vue({
+        el: '#slot_example'
+    });
+    var slotExm2 = new Vue({
+        el: '#slot_example2'
+    });
+    </script>
+</body>
+
+</html>
