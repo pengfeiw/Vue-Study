@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>深入了解组件(一)</title>
+	<meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<h3>注册组件应该遵循W3C规范，这会帮助你避免和当前以及未来的 HTML 元素相冲突。</h3>
+	<p>
+		自定义组件名，应该全部小写，且必须包含一个连字符，例如&ltcustom-component&gt
+	</p>
+	<h3>全局注册组件</h3>
+	<p>在组件基础部分，我们用到的组件注册都是全局注册，即使用<strong>Vue.component</strong>方法注册的组件</p>
+	<div id="GlobalRedgitComponent">
+		<global-redgit></global-redgit>
+	</div>
+	<h3>局部注册组件</h3>
+	<p>局部注册组件，直接在对象中定义组件模板，然后在Vue实例中的components中添加需要的组件</p>
+	<div id="LocalRedgitComponent">
+		<lcm1></lcm1><br>
+		<lcm2></lcm2>
+	</div>
+	<script type="text/javascript">
+		//全局注册组件
+		Vue.component('GlobalRedgit', {
+			template:'<span>这是一个全局注册的组件</span>'
+		});
+
+		//局部注册组件
+		var localComponent1 = {
+			template:`<span>局部注册组件1</span>`
+		};
+		var localComponent2 = {
+			template:`<span>局部注册组件2</span>`
+		};
+
+		//Vue实例
+		var exm1 = new Vue({
+			el:'#GlobalRedgitComponent'
+		});
+		var exm2 = new Vue({
+			el:'#LocalRedgitComponent',
+			components:{
+				lcm1:localComponent1,
+				lcm2: localComponent2
+			}
+		});
+	</script>
+</body>
+</html>
