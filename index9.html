@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>组件的Prop</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <h3>Prop中的大小写</h3>
+    <p>HTML中特性名大小写不敏感，所有大写都会解释为小写字母，所以在使用模板时，模板中的驼峰命名的prop需要使用等价的Kebab-case(连字符)命名：</p>
+    <div id="myComponent1">
+        <blog-post :post-title="postTitle"></blog-post>
+    </div>
+    <h3>Prop的类型</h3>
+    <p>目前为止，我们所接触到的定义属性的方式，都是字符串数组形式，我们还可以使用对象的形式，对象属性名表示需要定义的属性名称，对象属性值表示需要定义的属性所接受的值类型</p>
+    <div id="myComponent2">
+        <blog-post2 :title="postTitle" :wordscount="articleLength"></blog-post2>
+    </div>
+    <h3>静态或者动态传递Prop的值</h3>
+    <div id="myComponent3">
+        <blog-post3 title="静态传递的标题名" author="静态传递的作者名"></blog-post3><br>
+        <blog-post3 :title="post.title" :author="post.author"></blog-post3><br>
+        <blog-post4 :title="post.title + ' by ' + post.author"></blog-post4><br>
+    </div>
+    <hr>
+    <h3>传递一个数字</h3>
+    <p>即便 `20000` (数字)是静态的，我们仍然需要 `v-bind` 来告诉 Vue我们传入的是一个表达式而不是字符串, 否则会提示类型错误（type check）</p>
+    <div id="myComponent4">
+        <blog-post5 title="<<基督山伯爵>>" :wordscount="20000"></blog-post5>
+    </div>
+    <h3>传递一个bool值</h3>
+    <p>即便 `false` 是静态的，我们仍然需要 `v-bind` 来告诉 Vue,这是一个JavaScript表达式而不是一个字符串</p>
+    <h3>传递一个数组</h3>
+    <p>即便数组是静态的，我们仍然需要 `v-bind` 来告诉 Vue,这是一个JavaScript表达式而不是一个字符串</p>
+    <h3>传递一个对象</h3>
+    <p>即便对象是静态的，我们仍然需要 `v-bind` 来告诉 Vue,这是一个JavaScript表达式而不是一个字符串</p>
+    <hr>
+    <h3>传递一个对象所有的属性</h3>
+    <p>使用不带参数的v-bind，将一个对象的所有属性作为prop传入。需要注意的是这里的v-bind不能简写，即不能使用'：=propObj',且propObj必须被定义在对应的Vue实例的data属性中</p>
+    <div id="myComponent5">
+        <blog-post6 v-bind="propObj"></blog-post6>
+    </div>
+    <script type="text/javascript">
+    
+    //定义组件
+    Vue.component('blog-post', {
+        // 在 JavaScript 中是 camelCase 的
+        props: ['postTitle'],
+        template: '<span>{{ postTitle }}</span>'
+    });
+
+    //使用对象定义props，可以指定属性接受的值的类型
+    Vue.component('blog-post2', {
+        props: {
+            title: String, //！！！注意这里的值，不能使用字符串，例如title:'String',这样会报错。
+            wordscount: Number //！！！如果传值类型不对应，那么vue会给出错误
+        },
+        template: '<span><span>标题：{{title}}</span><br><span>字数：{{wordscount}}</span></span>'
+    });
+
+    Vue.component('blog-post3', {
+        props: {
+            title: String,
+            author: String
+        },
+        template: '<div><span>标题:{{title}} 作者:{{author}}</span><br></div>',
+    });
+    Vue.component('blog-post4', {
+        props: {
+            title: String
+        },
+        template: `<span>通过bind动态绑定一个复杂表达式：{{title}}</span>`
+    });
+
+    Vue.component('blog-post5', {
+        props: {
+            title: String,
+            wordscount: Number
+        },
+        template: '<span>The blog which title is {{title}} has {{wordscount}} words</span>'
+    });
+    Vue.component('blog-post6', {
+        props: {
+            id: Number,
+            title: String
+        },
+        template: '<span>The blog which id is {{id}} title is {{title}}</span>'
+    });
+
+
+    //定义Vue实例
+    var myApp1 = new Vue({
+        el: '#myComponent1',
+        data: {
+            postTitle: 'FirstBlogPost'
+        }
+    });
+    var myApp2 = new Vue({
+        el: '#myComponent2',
+        data: {
+            postTitle: 'SecondBlogPost',
+            articleLength: 300
+        }
+    });
+    var myApp3 = new Vue({
+        el: '#myComponent3',
+        data: {
+            post: {
+                title: '动态传递的标题名',
+                author: '动态传递的作者名'
+            }
+        }
+    });
+    var myApp4 = new Vue({
+        el: '#myComponent4',
+    });
+    var myApp5 = new Vue({
+        el: '#myComponent5',
+        data:{
+        	propObj:{
+        		id:1,
+        		title:'<<Son Of God>>'
+        	}
+        }
+    });
+    </script>
+</body>
+
+</html>

@@ -1,51 +1,104 @@
+<!-- 
+	1.组件命名：html Tag中大写字母会自动转换为小写字母，所以建议，所有命名都用小写字母和连字符代替。如果在组件命名中用到了大写字母，可以用连字符加对应的小写字母代替，例如组件名为
+			   'Component-A'，那么在使用时，可以使用<component-a>（大小写随意，因为所有大写字母都将转换为小写字母）来调用组件。
+	2.全局注册组件：通过Vue.component方法注册的组件，可以在所有vue实例中使用全局注册的组件。
+	3.局部注册组件：直接构建组件对象，对象中需要由template属性，指明需要注册的组件的模板，局部注册的组件，只能够被使用在挂载了该组件对象的Vue实例相关的元素中。
+	4.Vue实例中挂载局部注册组件：在components属性中添加需要使用的局部组件。
+	5.在一个组件中使用另一个组件：局部注册组件需要利用组件对象的components属性
+ -->
 <!DOCTYPE html>
 <html>
 <head>
-	<title>深入了解组件(一)</title>
-	<meta charset="utf-8">
+    <title>深入了解组件(一)</title>
+    <meta charset="utf-8">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-	<h3>注册组件应该遵循W3C规范，这会帮助你避免和当前以及未来的 HTML 元素相冲突。</h3>
-	<p>
-		自定义组件名，应该全部小写，且必须包含一个连字符，例如&ltcustom-component&gt
-	</p>
-	<h3>全局注册组件</h3>
-	<p>在组件基础部分，我们用到的组件注册都是全局注册，即使用<strong>Vue.component</strong>方法注册的组件</p>
-	<div id="GlobalRedgitComponent">
-		<global-redgit></global-redgit>
-	</div>
-	<h3>局部注册组件</h3>
-	<p>局部注册组件，直接在对象中定义组件模板，然后在Vue实例中的components中添加需要的组件</p>
-	<div id="LocalRedgitComponent">
-		<lcm1></lcm1><br>
-		<lcm2></lcm2>
-	</div>
-	<script type="text/javascript">
-		//全局注册组件
-		Vue.component('GlobalRedgit', {
-			template:'<span>这是一个全局注册的组件</span>'
-		});
+    <h3>注册组件应该遵循W3C规范，这会帮助你避免和当前以及未来的 HTML 元素相冲突。</h3>
+    <p>
+        自定义组件名，应该全部小写，且必须包含一个连字符，例如&ltcustom-component&gt
+    </p>
+    <h3>全局注册组件</h3>
+    <p>在组件基础部分，我们用到的组件注册都是全局注册，即使用<strong>Vue.component</strong>方法注册的组件</p>
+    <div id="GlobalRedgitComponent">
+        <global-redgit></global-redgit>
+    </div>
+    <h3>局部注册组件</h3>
+    <p>局部注册组件，使用template属性直接在对象中定义组件模板，然后在Vue实例中的components中添加需要的组件</p>
+    <div id="LocalRedgitComponent1">
+        <lcm1></lcm1><br>
+        <lcm2></lcm2><br>
+    </div>
+    <h3>直接在vue实例中注册组件，然后使用组件</h3>
+    <div id="LocalRedgitComponent2">
+        <component-a></component-a>
+    </div>
+    <h3>在一个组件中使用另一个组件</h3>
+    <div id="MyComponents">
+        <li>
+        	<global-redgit2></global-redgit2>
+        </li>
+        <li>
+        	<component-parent></component-parent>
+        </li>
+    </div>
+    <script type="text/javascript">
+    //全局注册组件
+    Vue.component('GlobalRedgit', {
+        template: '<span>这是一个全局注册的组件</span>'
+    });
 
-		//局部注册组件
-		var localComponent1 = {
-			template:`<span>局部注册组件1</span>`
-		};
-		var localComponent2 = {
-			template:`<span>局部注册组件2</span>`
-		};
+    //在新的component中使用其他组件
+    Vue.component('GlobalRedgit2', {
+        template: `<div>在全局注册组件A中使用全局组件B<br><GlobalRedgit></GlobalRedgit></div>`
+    });
 
-		//Vue实例
-		var exm1 = new Vue({
-			el:'#GlobalRedgitComponent'
-		});
-		var exm2 = new Vue({
-			el:'#LocalRedgitComponent',
-			components:{
-				lcm1:localComponent1,
-				lcm2: localComponent2
-			}
-		});
-	</script>
+    //局部注册组件
+    var localComponent1 = {
+        template: `<span>局部注册组件1</span>`
+    };
+    var localComponent2 = {
+        template: `<span>局部注册组件2</span>`
+    };
+
+    var localComponent3 = {
+        template: `<span>局部注册组件3</span>`
+    };
+
+    //在新的component中使用其他组件
+    var localComponent4 = {
+        template: `<div><span>在局部注册组件中使用另一个组件</span><br><component1></component1></div>`,
+        components:{
+        	'component1':localComponent3
+        }
+    };
+
+    //Vue实例
+    var exm1 = new Vue({
+        el: '#GlobalRedgitComponent'
+    });
+    var exm2 = new Vue({
+        el: '#LocalRedgitComponent1',
+        components: {
+            lcm1: localComponent1,
+            lcm2: localComponent2,
+        }
+    });
+    var exm3 = new Vue({
+        el: '#LocalRedgitComponent2',
+        components: {
+            'component-a': {
+                template: '<p>我是局部注册的组件</p>'
+            }
+        }
+    });
+    var exm4 = new Vue({
+        el: '#MyComponents',
+        components:{
+        	componentParent: localComponent4
+        }
+    });
+    </script>
 </body>
+
 </html>

@@ -1,0 +1,32 @@
+<!-- 单向数据流的研究（one way data flow） -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>test</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+    <div id="app1">
+        <custom-component :count="1"></custom-component>
+    </div>
+<body>
+    
+    <script type="text/javascript">
+    Vue.component('custom-component', {
+        props:['count'],
+        template:'<div><input type="button" value="改变count的值" @click="changeCount" />{{count}}</div>',
+        methods:{
+            changeCount(){
+                this.count++;
+            }
+        }
+    });
+
+    var testApp = new Vue({
+        el:'#app1'
+    });
+    </script>
+</body>
+
+</html>
