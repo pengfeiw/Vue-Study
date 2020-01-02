@@ -42,8 +42,18 @@
     <div id="myComponent5">
         <blog-post6 v-bind="propObj"></blog-post6>
     </div>
+    <hr>
+    <h3>Prop验证</h3>
+    <p>我们可以为组件的 prop 指定验证要求，例如你知道的这些类型。如果有一个需求没有被满足，则 Vue 会在浏览器控制台中警告你。这在开发一个会被别人用到的组件时尤其有帮助。</p>
+    <div id="myComponent6">
+        <blog-post7 prop-c="required" :prop-A="3" prop-f="success"></blog-post7>
+    </div>
+    <h3>类型检查type</h3>
+    <p>type既可以是原生构造函数（String、Number、Boolean、Array、Symbol、Object、Date、Function），也可以是自定义的构造函数</p>
+    <div id="myComponent7">
+        <custom-component1 :author="twj"></custom-component1>
+    </div>
     <script type="text/javascript">
-    
     //定义组件
     Vue.component('blog-post', {
         // 在 JavaScript 中是 camelCase 的
@@ -89,6 +99,57 @@
         template: '<span>The blog which id is {{id}} title is {{title}}</span>'
     });
 
+    //prop验证
+    Vue.component('blog-post7', {
+        props: {
+            // 基础的类型检查 (`null` 和 `undefined` 会通过任何类型验证)
+            propA: Number,
+            // 多个可能的类型
+            propB: [String, Number],
+            // 必填的字符串
+            propC: {
+                type: String,
+                required: true
+            },
+            // 带有默认值的数字
+            propD: {
+                type: Number,
+                default: 100
+            },
+            // 带有默认值的对象
+            propE: {
+                type: Object,
+                // 对象或数组默认值必须从一个工厂函数获取
+                default: function() {
+                    return { message: 'hello' }
+                }
+            },
+            // 自定义验证函数
+            propF: {
+                validator: function(value) {
+                    // 这个值必须匹配下列字符串中的一个
+                    return ['success', 'warning', 'danger'].indexOf(value) !== -1
+                }
+            }
+        },
+        template: '<span>打开控制台查看prop是否验证通过</span>'
+    });
+
+    //自定义构造函数
+    function Person(firstName, lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.name = function() {
+            return this.firstName + ' ' + this.lastName;
+        };
+    }
+    Vue.component('custom-component1', {
+        //NOTE:属性名称是props不是prop，千万别漏掉了s
+        props: {
+            author: Person //判断传入的author是否通过Person构造函数创建
+        },
+        template: '<span>作者:{{author.name()}}</span>',
+    });
 
     //定义Vue实例
     var myApp1 = new Vue({
@@ -118,11 +179,21 @@
     });
     var myApp5 = new Vue({
         el: '#myComponent5',
-        data:{
-        	propObj:{
-        		id:1,
-        		title:'<<Son Of God>>'
-        	}
+        data: {
+            propObj: {
+                id: 1,
+                title: '<<Son Of God>>'
+            }
+        }
+    });
+    var myApp6 = new Vue({
+        el: '#myComponent6'
+    });
+
+    var myApp7 = new Vue({
+        el: '#myComponent7',
+        data: {
+            twj: new Person('Tang', 'Weijuan')
         }
     });
     </script>
