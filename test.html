@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>禁用特性继承</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <custom-component customProp="propValue" newAddProp="propValue2"></custom-component>
+    </div>
+    <script type="text/javascript">
+    Vue.component('custom-component', {
+    	inheritAttrs: false, //此处设置禁用继承特性
+    	props:['customProp'],
+    	template:`<div id="1"><span id="2" v-bind="$attrs"><span id="3">vue.js</span></span></div>`,
+    });
+
+    var app1 = new Vue({
+    	el:'#app'
+    });
+    </script>
+</body>
+
+</html>

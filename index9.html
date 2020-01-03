@@ -1,6 +1,19 @@
+<!-- 
+    1.Prop的大小写
+    2.component中Prop值的另一种写法：用Object的方法，可以指定Prop的类型
+    3.在使用组件的时候，向Prop传递值有两种方法:
+        a.直接传递一个字符串, prop="value"
+        b.使用v-bind:prop="value"(:prop="value"), 绑定的是一个复杂的表达式。
+    4.传入数字、bool值、数组和对象的时候，即使是一个静态值，也需要使用v-bind绑定属性，来告诉组件我们传入的是一个表达式而不是字符串
+    5.使用不带参数的v-bind（v-bind:prop-name）传入一个对象的所有属性
+    6.单项数据流：https://blog.csdn.net/AHcola233/article/details/103810493
+    7.Prop 验证
+    8.使用自定义构造函数，来进行类型检查
+    9.当我们向组件传递一个已有属性值的属性： class和style属性会合并已有的属性值，其他的属性将直接替换
+    10.特性继承：https://blog.csdn.net/AHcola233/article/details/103816314
+ -->
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>组件的Prop</title>
     <meta charset="utf-8">
