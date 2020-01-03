@@ -2,25 +2,75 @@
 <html>
 
 <head>
-    <title>禁用特性继承</title>
+    <title>v-model</title>
     <meta charset="utf-8">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <custom-component customProp="propValue" newAddProp="propValue2"></custom-component>
+    <!-- v-model -->
+    <div id="app1">
+        <input type="text" v-model="message">
+        <span>{{message}}</span>
+    </div>
+
+    <!-- v-model的本质 -->
+    <div id="app2">
+        <input type="text" :value="message" @input="inputListener($event)">
+        <span>{{message}}</span>
+    </div>
+
+    <!-- 在自定义组件上使用v-model，无效 -->
+    <div id="app3">
+        <custom-input v-model="message"></custom-input>
+        <span>{{message}}</span>
+    </div>
+
+    <!-- 仿照v-model实现的本质，在自定义组件上模拟 -->
+    <div id="app4">
+        <custom-input2 :inputValue="message" @input-change="message=value"></custom-input2>
+        <span>{{message}}</span>
     </div>
     <script type="text/javascript">
-    Vue.component('custom-component', {
-    	inheritAttrs: false, //此处设置禁用继承特性
-    	props:['customProp'],
-    	template:`<div id="1"><span id="2" v-bind="$attrs"><span id="3">vue.js</span></span></div>`,
-    });
+        Vue.component('custom-input',{
+            template:`<input type="text"/>`
+        });
 
-    var app1 = new Vue({
-    	el:'#app'
-    });
+        Vue.component('custom-input2', {
+            props:{
+                inputValue:String
+            },
+            template:`<input type="text" :value="inputValue" @input="$emit('input-change', $event)"/>`
+        })
+        var app1 = new Vue({
+            el:'#app1',
+            data:{
+                message:"Hello Vue"
+            }
+        });
+        var app2 = new Vue({
+            el:'#app2',
+            data:{
+                message:"Hello Vue"
+            },
+            methods:{
+                inputListener(event){
+                    this.message=event.target.value;
+                }
+            }
+        });
+        var app3 = new Vue({
+            el:'#app3',
+            data:{
+                message:'Hello Vue'
+            }
+        });
+        var app4 = new Vue({
+            el:'#app4',
+            data:{
+                message:'Hello Vue'
+            }
+        });
     </script>
 </body>
 
