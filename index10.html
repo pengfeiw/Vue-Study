@@ -1,3 +1,11 @@
+<!-- 
+    1.事件名称
+    2.自定义组件的v-model：
+        我的博客：https://blog.csdn.net/AHcola233/article/details/103851723
+        stackoverflow：https://stackoverflow.com/questions/47311936/v-model-and-child-components/47312172#47312172
+    3..native修饰符和$listeners属性：https://blog.csdn.net/AHcola233/article/details/103858880
+    4..sync修饰符：https://blog.csdn.net/AHcola233/article/details/103860218
+ -->
 <!DOCTYPE html>
 <html>
 
@@ -15,7 +23,17 @@
     </div>
     <h3>自定义v-model</h3>
     <div id="app2">
-    	<component2 v-model="lovingVue"></component2>
+        <component2 v-model="foo"></component2> <!-- 这句话会被vue转化为：<component2 :inputvalue="foo" @input-change="foo=$event"></component2> ，从而更新inputvalue -->
+        <span>{{foo}}</span>
+    </div>
+    <h3>.native修饰符：父级组件直接监听组件模板根元素上的事件</h3>
+    <div id="app3">
+        <component3 @input.native="myAlert('Hello Js')"></component3>
+    </div>
+    <h3>$listener属性</h3>
+    <h3>.sync修饰符</h3>
+    <div id="app4">
+        <blog-post v-bind:title.sync="post.title" v-bind:content.sync="post.content"></blog-post>
     </div>
     <script type="text/javascript">
     //组件定义
@@ -25,20 +43,34 @@
 
     Vue.component('component2', {
         model: {
-            prop: 'checked',
-            event: 'change'
+            prop: 'inputvalue',
+            event: 'input-change'
         },
         props: {
-            checked: Boolean
+            inputvalue: String
         },
-        template: `
-    <input
-      type="checkbox"
-      v-bind:checked="checked"
-      v-on:change="$emit('change', $event.target.checked)"
-    >
-  `
+        computed: {
+            content: {
+                get() {
+                    return this.inputvalue;
+                },
+                set(val) {
+                    this.$emit('input-change', val);
+                }
+            }
+        },
+        template: `<input type="text" :value="content" @input="content=$event.target.value" />` //这句话也可以改为`<input type="text" v-model="content"/>`，这里会更新<input>元素的value
     });
+
+    Vue.component('component3', {
+        template: `<label>input:<input type="text" value="hello js"/></label>`
+    });
+
+    Vue.component('blog-post', {
+        props: ['title', 'content'],
+        template: `<div><span>{{title}}:{{content}}</span><button @click="$emit('update:content', '新内容')">更新内容</button></div>`
+    });
+
 
     //Vue实例
     var app1 = new Vue({
@@ -51,10 +83,28 @@
     });
 
     var app2 = new Vue({
-    	el:'#app2',
-    	data:{
-    		lovingVue: true
-    	}
+        el: '#app2',
+        data: {
+            foo: 'bar'
+        }
+    });
+
+    var app3 = new Vue({
+        el: '#app3',
+        methods: {
+            myAlert(msg) {
+                alert(msg);
+            }
+        }
+    });
+    var app = new Vue({
+        el: "#app4",
+        data: {
+            post: {
+                title: '博客标题',
+                content: '博客内容'
+            }
+        }
     });
     </script>
 </body>
