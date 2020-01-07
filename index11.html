@@ -1,0 +1,113 @@
+<!-- 
+	1.slot插槽：组件在template中指定<slot> Tag，使该组件具备插槽功能，可以在父组件标签中插入内容
+	2.slot具名插槽：通过向slot添加name属性，指定slot名称，使模板具备多个插槽位置
+	父组件中使用slot时，也需要指定相应的插槽名，方法是使用template标签，配合v-slot指令，指定对应的name，如果不指定name，表示默认插槽位置
+	3.slot作用域插槽：子组件向父组件传递数据的方式，但仅限于在<slot>标签内使用，方法是template中向<slot>标签绑定属性，属性内容为要传递的数据，在父组件中向对应的name属性名称，指定属性集合名称，
+	然后可以用属性集合名称访问子组件传递过来的数据。
+ -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>组件插槽</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <h3>插槽内容：slot</h3>
+    <p>前面我们已经接触过slot标签，允许我们在组件元素中插入内容</p>
+    <div id="app1">
+        <slot-demo>slot-demo标签中任何文字<span>或者html都是要插入的内容</span></slot-demo>
+    </div>
+    <h3>扩展：父组件与子组件的作用域</h3>
+    <p>父级模板里的所有内容都是在父级作用域中编译的；子模板里的所有内容都是在子作用域中编译的。所以父子组件数据是无法直接传递的，所以我们之前提到过父子组件间的数据通信，父组件通过props向子组件传递数据，子组件通过event向父组件传递数据</p>
+    <h3>插槽后备内容</h3>
+    <p>当用户没有提供插槽内容的时候，那么将会显示后备内容（即插槽的默认内容）</p>
+    <div id="app2">
+        <slot-default>提供后备内容，插槽内容没显现</slot-default>
+        <slot-default></slot-default>
+    </div>
+    <h3>具名插槽：使用slot的name属性和v-slot指令</h3>
+    <p>当我们需要在组件的不同位置，添加多个插槽内容时，需要用到具名插槽</p>
+    <div id="app3">
+        <slot-name>
+        	<!-- 使用template元素，添加v-slot属性，指定插槽内容添加的位置 -->
+            <template v-slot:header>
+                <span>Here might be a page title</span>
+            </template>
+            <!-- <template v-slot:default> --> <!-- 可以添加default，表示默认插槽位置 -->
+            <span>A paragraph for the main content.</span><br>
+            <span>And another one.</span>
+            这会被添加到主体中
+            <!-- </template> -->
+            <template v-slot:footer>
+                <span>Here's some contact info</span>
+            </template>
+        </slot-name>
+    </div>
+    <h3>作用域插槽：前面说过，父子作用域是不同的，父组件中无法直接读取子组件中的变量。在插槽中可以将变量绑定到slot的特性上，然后在父组件中使用子组件中的变量</h3>
+    <div id="app4">
+    	<showname>
+    		<template v-slot:default="slotProps">
+    			{{slotProps.user.firstName}}  <!-- user属性是slot的属性，在component定义中给slot绑定的属性名 -->
+    		</template>
+    	</showname>
+    </div>
+    <script type="text/javascript">
+    //vue组件
+    Vue.component('slot-demo', {
+        template: `<p><slot></slot></p>`
+    });
+    Vue.component('slot-default', {
+        template: `<p><slot>没有提供插槽内容，所以后备内容显现</slot></p>`
+    });
+    Vue.component('slot-name', {
+    	//给slot添加name属性，指定具名插槽，如果slot不包含name属性，那么代表默认插槽内容添加位置，其name有默认值为default
+        template: `
+		<div class="container">
+		  <span>标题：</span><br>
+		  <header>
+		    <slot name="header"></slot>		
+		  </header>
+		  <span>主体：</span><br>
+		  <main>
+		    <slot></slot>	
+		  </main>
+		  <span>页脚：</span><br>
+		  <footer>
+		    <slot name="footer"></slot>
+		  </footer>
+		</div>
+    	`
+    });
+
+    Vue.component('showname', {
+    	data(){
+    		return {
+    			username:{
+    				firstName:"Pengfei",
+    				lastName:"Wang"
+    			}
+    		}
+    	},
+    	template:`<span>Name:<slot v-bind:user="username">{{this.username.lastName}}</slot></span>`	//在slot中添加user特性，将this.user赋值给该特性，供父组件调用
+    });
+    //vue实例，实例必须定义在全局组件之后
+    var app1 = new Vue({
+        el: '#app1'
+    });
+    var app2 = new Vue({
+        el: "#app2"
+    });
+    var app3 = new Vue({
+    	el:'#app3'
+    });
+    var app4 = new Vue({
+    	el:'#app4',
+    });
+    </script>
+</body>
+
+</html>
