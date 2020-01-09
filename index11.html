@@ -4,8 +4,9 @@
 	父组件中使用slot时，也需要指定相应的插槽名，方法是使用template标签，配合v-slot指令，指定对应的name，如果不指定name，表示默认插槽位置
 	3.slot作用域插槽：子组件向父组件传递数据的方式，但仅限于在<slot>标签内使用，方法是template中向<slot>标签绑定属性，属性内容为要传递的数据，在父组件中向对应的name属性名称，指定属性集合名称，
 	然后可以用属性集合名称访问子组件传递过来的数据。
+	4.默认插槽的简写
+	5.插槽的对象解构
  -->
-
 <!DOCTYPE html>
 <html>
 
@@ -33,11 +34,12 @@
     <p>当我们需要在组件的不同位置，添加多个插槽内容时，需要用到具名插槽</p>
     <div id="app3">
         <slot-name>
-        	<!-- 使用template元素，添加v-slot属性，指定插槽内容添加的位置 -->
+            <!-- 使用template元素，添加v-slot属性，指定插槽内容添加的位置 -->
             <template v-slot:header>
                 <span>Here might be a page title</span>
             </template>
-            <!-- <template v-slot:default> --> <!-- 可以添加default，表示默认插槽位置 -->
+            <!-- <template v-slot:default> -->
+            <!-- 可以添加default，表示默认插槽位置 -->
             <span>A paragraph for the main content.</span><br>
             <span>And another one.</span>
             这会被添加到主体中
@@ -49,11 +51,46 @@
     </div>
     <h3>作用域插槽：前面说过，父子作用域是不同的，父组件中无法直接读取子组件中的变量。在插槽中可以将变量绑定到slot的特性上，然后在父组件中使用子组件中的变量</h3>
     <div id="app4">
-    	<showname>
-    		<template v-slot:default="slotProps">
-    			{{slotProps.user.firstName}}  <!-- user属性是slot的属性，在component定义中给slot绑定的属性名 -->
-    		</template>
-    	</showname>
+        <showname>
+            <template v-slot:default="slotProps">
+                {{slotProps.user.firstName}}
+                <!-- user属性是slot的属性，在component定义中给slot绑定的属性名 -->
+            </template>
+        </showname>
+    </div>
+    <h3>作用域插槽：默认插槽的简写</h3>
+    <ul>
+        <li>默认插槽的名称是default,如果组件模板中只有一个默认插槽，没有其他具名插槽的时候，我们可以在使用组件时进行简写,将v-slot直接用在组件上，并且可以省略名称default</li>
+        <li>需要注意，如果组件template中不止默认插槽，还有其他具名插槽，那么不能简写，否则会无效</li>
+    </ul>
+    <div id="app5">
+        <slot-logogram v-slot:default="slotProps">{{slotProps.user.firstName}}</slot-logogram><br>
+        <slot-logogram v-slot="slotProps">{{slotProps.user.firstName}}</slot-logogram>
+    </div>
+    <h3>作用域插槽扩展：从上面的例子可以看出，作用域插槽在使用时，实质是将slot绑定的属性传给一个对象（上面的例子是slotProps），那么在ES6中可以使用对象解构赋值</h3>
+    <div id="app6">
+        <slot-deconstruction v-slot="{user:{firstName, lastName}}">
+            名：{{firstName}}<br>
+            姓：{{lastName}}
+        </slot-deconstruction>
+    </div>
+    <h3>动态参数回顾,v-bind和v-on可以指定动态的参数</h3>
+    <div id="app7">
+        <p @[eventname]="myAlert('Hello Vue!')">动态参数示例</p>
+    </div>
+    <h3>动态指令参数，可以用在v-slot上, 指定动态的插槽名, 这样将内容可以插入到不同位置</h3>
+    <div id="app8">
+        <dynamic-slot-para>
+            <template v-slot:[slot]>
+                'Wang Pengfei'
+            </template>
+        </dynamic-slot-para>
+    </div>
+    <h3>具名插槽v-slot的缩写: v-slot:name等价于#name</h3>
+    <div id="app9">
+        <slot-abbr>
+            <template #abbrslotname>王鹏飞</template>
+        </slot-abbr>
     </div>
     <script type="text/javascript">
     //vue组件
@@ -64,7 +101,7 @@
         template: `<p><slot>没有提供插槽内容，所以后备内容显现</slot></p>`
     });
     Vue.component('slot-name', {
-    	//给slot添加name属性，指定具名插槽，如果slot不包含name属性，那么代表默认插槽内容添加位置，其name有默认值为default
+        //给slot添加name属性，指定具名插槽，如果slot不包含name属性，那么代表默认插槽内容添加位置，其name有默认值为default
         template: `
 		<div class="container">
 		  <span>标题：</span><br>
@@ -84,16 +121,47 @@
     });
 
     Vue.component('showname', {
-    	data(){
-    		return {
-    			username:{
-    				firstName:"Pengfei",
-    				lastName:"Wang"
-    			}
-    		}
-    	},
-    	template:`<span>Name:<slot v-bind:user="username">{{this.username.lastName}}</slot></span>`	//在slot中添加user特性，将this.user赋值给该特性，供父组件调用
+        data() {
+            return {
+                username: {
+                    firstName: "Pengfei",
+                    lastName: "Wang"
+                }
+            }
+        },
+        template: `<span>Name:<slot v-bind:user="username">{{this.username.lastName}}</slot></span>` //在slot中添加user特性，将this.user赋值给该特性，供父组件调用
     });
+
+    Vue.component('slot-logogram', {
+        data() {
+            return {
+                username: {
+                    firstName: "Pengfei",
+                    lastName: "Wang"
+                }
+            }
+        },
+        template: `<span>Name:<slot v-bind:user="username">{{this.username.lastName}}</slot></span>` //在slot中添加user特性，将this.user赋值给该特性，供父组件调用
+    });
+    Vue.component('slot-deconstruction', {
+        data() {
+            return {
+                username: {
+                    firstName: "Pengfei",
+                    lastName: "Wang"
+                }
+            }
+        },
+        template: `<span><slot v-bind:user="username">{{this.username.lastName}}</slot></span>` //在slot中添加user特性，将this.user赋值给该特性，供父组件调用
+    });
+
+    Vue.component('dynamic-slot-para', {
+        template: `<span><slot name="slot1"></slot>---内容会插入在前面还是后面呢---<slot name="slot2"></slot></span>`
+    });
+
+    Vue.component('slot-abbr', {
+        template: `<span>Name:<slot name='abbrslotname'>'Wang Pengfei'</slot></span>`
+    })
     //vue实例，实例必须定义在全局组件之后
     var app1 = new Vue({
         el: '#app1'
@@ -102,10 +170,37 @@
         el: "#app2"
     });
     var app3 = new Vue({
-    	el:'#app3'
+        el: '#app3'
     });
     var app4 = new Vue({
-    	el:'#app4',
+        el: '#app4',
+    });
+    var app5 = new Vue({
+        el: '#app5'
+    });
+    var app6 = new Vue({
+        el: '#app6'
+    });
+    var app7 = new Vue({
+        el: '#app7',
+        data: {
+            prop: 'dynamicname',
+            eventname: 'click'
+        },
+        methods: {
+            myAlert(msg) {
+                alert(msg);
+            }
+        }
+    });
+    var app8 = new Vue({
+        el: '#app8',
+        data: {
+            slot: 'slot1'
+        }
+    });
+    var app9 = new Vue({
+        el: '#app9',
     });
     </script>
 </body>

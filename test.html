@@ -1,49 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>.sync</title>
     <meta charset="utf-8">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
+
 <body>
-    <!-- <div id="app">
-        <blog-post :post="post" @update:title="post.title=$event"></blog-post>
-
-    </div>
-    <script type="text/javascript">
-        Vue.component('blog-post', {
-            props:['post'],
-            template:`<div><span>{{post.title}}:{{post.content}}</span><button @click="$emit('update:title', '新标题')">更新标题</button></div>`
-        });
-        var app = new Vue({
-            el:"#app",
-            data:{
-                post:{
-                    title:'博客标题',
-                    content:'博客内容'
-                }
-            }
-        });
-    </script> -->
-
-    <div id="app">
-        <!-- <blog-post v-bind:title.sync="post.title" v-bind:content.sync="post.content"></blog-post> -->
-        <blog-post v-bind:title="post.title" v-bind:content="post.content" @update:title="post.title=$event" @update:content="post.content=$event"></blog-post>
-    </div>
-    <script type="text/javascript">
-        Vue.component('blog-post', {
-            props:['title', 'content'],
-            template:`<div><span>{{title}}:{{content}}</span><button @click="$emit('update:content', '新内容')">更新内容</button></div>`
-        });
-        var app = new Vue({
-            el:"#app",
-            data:{
-                post:{
-                    title:'博客标题',
-                    content:'博客内容'
-                }
-            }
-        });
-    </script>
+    
 </body>
+
 </html>
