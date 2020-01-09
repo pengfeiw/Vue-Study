@@ -1,9 +1,14 @@
+<!-- 
+    1.动态组件：<component>和它的is属性，动态切换子组件
+    2.异步组件：暂时没看懂，放着后面学习
+ -->
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
-    <title>Vue 测试实例 - 动态组件</title>
+    <title>动态组件和异步组件</title>
+    <meta charset="utf-8">
     <script src="https://cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
 </head>
 
@@ -21,6 +26,8 @@
         </keep-alive><br>
         <span>改变which_to_show的值，当前实例的子组件个数：{{this.$children.length}}</span>
     </div>
+
+    <h3>异步组件暂时没看懂，放着后面再看，先跳过</h3>
     <script>
     Vue.component('component1', {
         template: `<span>component1</span>`
