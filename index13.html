@@ -1,0 +1,78 @@
+<!-- 
+	1.通过$root访问vue根实例
+	2.通过$parent访问父组件
+	3.通过$refs和ref访问子组件和子元素：https://blog.csdn.net/AHcola233/article/details/103924190
+ -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>组件：处理边界情况</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
+</head>
+
+<body>
+    <h3>$root:子组件可以通过$root访问根实例</h3>
+    <div id="app1">
+    	<component1></component1>
+    </div>
+    <h3>$parent:子组件可以通过$parent访问父组件</h3>
+    <div id="app3">
+    	<component3></component3>
+    </div>
+    <h3>ref和$refs的使用</h3>
+    <div id="app4">
+    	<p>ref用在Dom元素上</p>
+		 <span ref="number">1</span>
+		 <button ref="mybutton" @click="add">ADD</button>
+    </div>
+    <script type="text/javascript">
+    	Vue.component('component1',{
+    		template:`<div><span>{{this.$root.foo}}</span><br><span>{{this.$root.bar}}</span><br><span>{{this.$root.baz()}}</span></div>`
+    	});
+    	Vue.component('component3',{
+    		data(){
+    			return {
+    				name:'Wpf'
+    			}
+    		},
+    		template:`<child1></child1>`,
+    		//components中声明子组件
+    		components:{
+    			child1:{
+    				template:`<span>{{this.$parent.name}}</span>`
+    			}
+    		}
+    	});
+	    var app1 = new Vue({
+	    	el:'#app1',
+	        data: {
+	            foo: 1
+	        },
+	        computed: {
+	            bar: function() { return 'barCompu'; }
+	        },
+	        methods: {
+	            baz: function() { return 'bazFun'; }
+	        }
+	    });
+	    var app3 = new Vue({
+	    	el:'#app3'
+	    });
+	    var app4 = new Vue({
+	    	el:'#app4',
+	    	methods:{
+	    		add(){
+	    			console.log(this.$refs.number);
+	    			this.$refs.number.innnerText = 3;
+	    			console.log(this.$refs.number.innerText)
+	    			this.$refs.mybutton.innerText = "Hello Vue";
+	    		}
+	    	}
+	    });
+    </script>
+</body>
+
+</html>

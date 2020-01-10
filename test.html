@@ -1,49 +1,27 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+    <title>test</title>
     <meta charset="utf-8">
-    <title>Vue 测试实例 - 动态组件</title>
-    <script src="https://cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
-
 <body>
-    <h3>动态组件：&ltcomponent&gt通过v-bind绑定is属性，is属性值，代表显示的组件，通过改变is属性值，来改变组件</h3>
     <div id="app">
-        <component v-bind:is="which_to_show"></component>
-        <span>改变which_to_show的值，观察当前实例的子组件个数：{{this.$children.length}}</span>
+        <span>{{arrowFun()}}</span>
     </div>
-    <h3>&ltkeep-alive&gt保存组件状态</h3>
-    <p>在动态组件中，通过切换is属性的值，切换子组件时，实质上每次都是新创建一个component实例，而废弃当前的component实例，用新创建的component替代当前component。如果想保存当前子组件状态，而不是直接删除，可以使用&ltkeep-alive&gt</p>
-    <div id="app2">
-        <keep-alive>
-            <component v-bind:is="which_to_show"></component>
-        </keep-alive><br>
-        <span>改变which_to_show的值，当前实例的子组件个数：{{this.$children.length}}</span>
-    </div>
-    <script>
-    Vue.component('component1', {
-        template: `<span>component1</span>`
-    });
-    Vue.component('component2', {
-        template: `<span>component2</span>`
-    });
-    Vue.component('component3', {
-        template: `<span>component3</span>`
-    });
-    var app = new Vue({
-        el: '#app',
-        data: {
-            which_to_show: 'component1'
-        }
-    });
-     var app2 = new Vue({
-        el: '#app2',
-        data: {
-            which_to_show: 'component1'
-        }
-    });
+    <script type="text/javascript">
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                data1:'Js'
+            },
+            methods:{
+                arrowFun: ()=>{
+                    console.log(this);
+                    return vm.data1;
+                }
+            }
+        });
     </script>
 </body>
-
 </html>
