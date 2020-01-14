@@ -2,6 +2,9 @@
 	1.通过$root访问vue根实例
 	2.通过$parent访问父组件
 	3.通过$refs和ref访问子组件和子元素：https://blog.csdn.net/AHcola233/article/details/103924190
+    4.provie和inject实例属性
+    5.$on、$once、$off
+    6.递归组件
  -->
 
 <!DOCTYPE html>
@@ -28,6 +31,29 @@
 		 <span ref="number">1</span>
 		 <button ref="mybutton" @click="add">ADD</button>
     </div>
+    <h3>访问祖先组件：provide和inject</h3>
+    <ul>
+        <li>祖先组件不需要知道哪些后代组件使用它提供的属性</li>
+        <li>后代组件不需要知道被注入的属性来自哪里</li>
+    </ul>
+    <div id="app5"> 
+        <component_grandpa></component_grandpa>
+    </div>
+    <h3>程序化事件侦听：$on、$once、$off</h3>
+    <ul>
+        <li>$on：类似v-on指令，可以监听事件</li>
+        <li>$once: 一次性监听一个事件</li>
+        <li>$off: 停止监听一个事件</li>
+    </ul>
+    <div id="app6">
+        <button @click="$emit('button1_click')">on</button>
+        <button @click="$emit('button2_click')">once</button>
+        <button @click="$off('button1_click')">off</button>
+    </div>
+    <h3>递归组件：组件模板可以调用自身，达到递归的目的，但是必须记住用v-if和v-else退出递归，否则无限递归会出错</h3>
+    <div id="app7">
+        
+    </div>
     <script type="text/javascript">
     	Vue.component('component1',{
     		template:`<div><span>{{this.$root.foo}}</span><br><span>{{this.$root.bar}}</span><br><span>{{this.$root.baz()}}</span></div>`
@@ -46,6 +72,41 @@
     			}
     		}
     	});
+        Vue.component('component_grandpa', {
+            data(){
+                return {
+                    name:'W1'
+                }
+            },
+            components:{
+                component_father:{
+                    data(){
+                        return {
+                            name:'W2'
+                        }
+                    },
+                    provide(){
+                        return {
+                            fatherName:this.name
+                        }
+                    },
+                    components:{
+                        child:{
+                            inject:['grandPaName', 'fatherName'],
+                            template:`<div><span>My grandPa:{{grandPaName}}</span><br><span>My father:{{fatherName}}</span></div>`
+                        }
+                    },
+                    template:`<child></child>`
+                }
+            },
+            provide(){
+                return {
+                    grandPaName: this.name
+                }
+            },
+            template:`<component_father></component_father>`
+        });
+
 	    var app1 = new Vue({
 	    	el:'#app1',
 	        data: {
@@ -72,6 +133,18 @@
 	    		}
 	    	}
 	    });
+        var app5 = new Vue({
+            el:'#app5',
+        });
+        var app6 = new Vue({
+            el:'#app6'
+        });
+        app6.$on('button1_click', function(){
+            alert('button1_click');
+        });
+        app6.$once('button2_click', function(){
+            alert('button2_click');
+        })
     </script>
 </body>
 
